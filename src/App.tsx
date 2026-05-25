@@ -7,6 +7,8 @@ function App() {
   const [game, setGame] = useState(new Chess());
   const [status, setStatus] = useState<string>("playing");
 
+  const profiles = { user: { name: "Name 1" }, opponent: { name: "Name 2" } };
+
   function updateStatus(gameCopy: Chess) {
     if (gameCopy.isCheckmate()) {
       const loser = gameCopy.turn() === "w" ? "White" : "Black";
@@ -61,18 +63,18 @@ function App() {
             style={{ borderColor: game.turn() === "w" ? "yellow" : "gray" }}
           >
             <p>User:</p>
-            <div>Name 1</div>
+            <div>{profiles.user.name}</div>
           </div>
           <div
             className="player-opponent-card"
             style={{ borderColor: game.turn() === "w" ? "gray" : "yellow" }}
           >
             <p>Opponent:</p>
-            <div>Name 2</div>
+            <div>{profiles.opponent.name}</div>
           </div>
         </div>
         <div className="status-container">
-          <h1>{status}</h1>
+          <h2>{status}</h2>
         </div>
         <div className="chess-board">
           <Chessboard
