@@ -6,8 +6,24 @@
 body {
   background-color: #002b00;
 }
-.header {
-  height: 75px;
+.navigation {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  background-color: #007500;
+  width: 75%;
+  height: 5rem;
+  margin: 1rem auto;
+  border-radius: 1rem;
+  padding: 1rem;
+}
+.navigation-link {
+  color: #ffffff;
+  font-size: 1.5rem;
+  text-decoration: none;
+}
+.navigation-link:hover {
+  text-decoration: underline;
 }
 .profile-container {
   display: flex;
