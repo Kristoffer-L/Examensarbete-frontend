@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { Chess } from "chess.js";
 import { Chessboard } from "react-chessboard";
-import "../App.css";
+import "../../../App.css";
 
 function GamePage() {
   const [game, setGame] = useState(new Chess());

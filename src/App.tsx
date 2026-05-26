@@ -1,8 +1,7 @@
 import { Routes, Route } from "react-router-dom";
 import Header from "./components/Header";
-import HomePage from "./pages/HomePage";
-import GamePage from "./pages/GamePage";
-// import "./App.css";
+import HomePage from "./pages/(main)/home/page";
+import GamePage from "./pages/(main)/chess/page";
 
 function App() {
   return (
