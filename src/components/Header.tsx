@@ -11,6 +11,9 @@ function Header() {
         <Link className="navigation-link" to="/game">
           Chess
         </Link>
+        <Link className="navigation-link" to="/sign-in">
+          Sign In
+        </Link>
       </nav>
     </header>
   );
