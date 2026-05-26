@@ -2,7 +2,7 @@
 import { Link } from "react-router-dom";
 import { useState } from "react";
 
-function SignInPage() {
+function SignUpPage() {
   const [errors, setErrors] = useState<{ [key: string]: string[] }>({});
   const [error, setError] = useState<string | null>(null);
 
@@ -28,7 +28,7 @@ function SignInPage() {
   return (
     <div className="flex flex-col bg-green-400 w-[50%] rounded-2xl m-auto p-4">
       <form onSubmit={handleSubmit} className="flex flex-col">
-        <h1 className="text-center text-2xl">Sign In</h1>
+        <h1 className="text-center text-2xl">Sign Up</h1>
         {error && <p style={{ color: "red" }}>{error}</p>}
         <div>
           <label>Email:</label>
@@ -58,15 +58,11 @@ function SignInPage() {
           type="submit"
           className="bg-green-600 text-white border border-black rounded-md self-center py-2 px-6 m-4 hover:bg-green-700"
         >
-          Sign In
+          Sign Up
         </button>
       </form>
-      <p>Don't have an account?</p>
-      <Link to="/sign-up" className="underline text-bold">
-        Sign up here.
-      </Link>
     </div>
   );
 }
 
-export default SignInPage;
+export default SignUpPage;

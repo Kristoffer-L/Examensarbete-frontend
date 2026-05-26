@@ -3,6 +3,7 @@ import Header from "./components/Header";
 import HomePage from "./pages/(main)/home/page";
 import GamePage from "./pages/(main)/chess/page";
 import SignInPage from "./pages/(auth)/sign-in/page";
+import SignUpPage from "./pages/(auth)/sign-up/page";
 
 function App() {
   return (
@@ -12,6 +13,7 @@ function App() {
         <Route path="/" element={<HomePage />} />
         <Route path="/game" element={<GamePage />} />
         <Route path="/sign-in" element={<SignInPage />} />
+        <Route path="/sign-up" element={<SignUpPage />} />
       </Routes>
     </>
   );
