@@ -12,10 +12,25 @@ function SignUpPage() {
     setErrors({});
 
     const formData = new FormData(event.currentTarget as HTMLFormElement);
+    const name = formData.get("name") as string;
     const email = formData.get("email") as string;
     const password = formData.get("password") as string;
 
     try {
+      const response = await fetch(`http://localhost:3000/auth/sign-up`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ name, email, password }),
+      });
+      if (response.ok) {
+        const data = await response.json();
+        console.log("response", data);
+      } else {
+        throw new Error("error");
+      }
+      console.log("name", name);
       console.log("email", email);
       console.log("password", password);
       console.log("formData", formData);
@@ -29,6 +44,18 @@ function SignUpPage() {
       <form onSubmit={handleSubmit} className="flex flex-col">
         <h1 className="text-center text-2xl">Sign Up</h1>
         {error && <p style={{ color: "red" }}>{error}</p>}
+        <div>
+          <label>Name:</label>
+          <input
+            className="flex bg-white border rounded-md"
+            type="text"
+            name="name"
+            required
+          />
+          {errors.name && (
+            <p style={{ color: "red" }}>{errors.name.join(", ")}</p>
+          )}
+        </div>
         <div>
           <label>Email:</label>
           <input

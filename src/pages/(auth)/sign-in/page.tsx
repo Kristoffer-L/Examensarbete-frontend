@@ -17,7 +17,13 @@ function SignInPage() {
     const password = formData.get("password") as string;
 
     try {
-      const response = await fetch(`http://localhost:3000/`);
+      const response = await fetch(`http://localhost:3000/auth/sign-in`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ email, password }),
+      });
       if (response.ok) {
         const data = await response.json();
         console.log("response", data);
