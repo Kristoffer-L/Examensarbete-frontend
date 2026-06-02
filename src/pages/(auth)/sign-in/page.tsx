@@ -49,6 +49,7 @@ function SignInPage() {
             className="flex bg-white border rounded-md"
             type="email"
             name="email"
+            autoComplete="current-email"
             required
           />
           {errors.email && (
@@ -61,6 +62,7 @@ function SignInPage() {
             className="flex bg-white border rounded-md"
             type="password"
             name="password"
+            autoComplete="current-password"
             required
           />
           {errors.password && (

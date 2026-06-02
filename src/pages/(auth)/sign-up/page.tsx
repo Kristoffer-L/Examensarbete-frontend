@@ -50,6 +50,7 @@ function SignUpPage() {
             className="flex bg-white border rounded-md"
             type="text"
             name="name"
+            autoComplete="current-name"
             required
           />
           {errors.name && (
@@ -62,6 +63,7 @@ function SignUpPage() {
             className="flex bg-white border rounded-md"
             type="email"
             name="email"
+            autoComplete="current-email"
             required
           />
           {errors.email && (
@@ -74,6 +76,7 @@ function SignUpPage() {
             className="flex bg-white border rounded-md"
             type="password"
             name="password"
+            autoComplete="current-password"
             required
           />
           {errors.password && (

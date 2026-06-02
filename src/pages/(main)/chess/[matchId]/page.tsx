@@ -55,13 +55,16 @@ function GamePage() {
   return (
     <>
       <section className="main">
-        <div className="flex justify-around">
+        <div className="flex justify-between mx-4">
           <div
             className="bg-white h-20 w-60 border-2 border-solid border-gray-500 rounded-3xl py-2.5 px-1 m-4"
             style={{ borderColor: game.turn() === "w" ? "yellow" : "gray" }}
           >
             <p>User:</p>
             <div>{profiles.user.name}</div>
+          </div>
+          <div className="flex bg-white rounded-3xl my-5">
+            <h2 className="m-auto px-4 md:my-5 md:mx-auto">{status}</h2>
           </div>
           <div
             className="bg-white h-20 w-60 border-2 border-solid border-gray-500 rounded-3xl py-2.5 px-1 m-4"
@@ -70,9 +73,6 @@ function GamePage() {
             <p>Opponent:</p>
             <div>{profiles.opponent.name}</div>
           </div>
-        </div>
-        <div className="flex h-12 bg-white rounded-3xl my-5 mx-4">
-          <h2 className="m-auto md:w-96 md:my-5 md:mx-auto">{status}</h2>
         </div>
         <div className="mx-4 md:w-[50%] md:m-auto">
           <Chessboard
