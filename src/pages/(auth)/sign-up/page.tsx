@@ -1,7 +1,9 @@
 "use client";
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 
 function SignUpPage() {
+  const navigate = useNavigate();
   const [errors, setErrors] = useState<{ [key: string]: string[] }>({});
   const [error, setError] = useState<string | null>(null);
 
@@ -34,6 +36,8 @@ function SignUpPage() {
       console.log("email", email);
       console.log("password", password);
       console.log("formData", formData);
+
+      navigate("/sign-in");
     } catch (err: any) {
       setError(err?.message ?? "Something went wrong.");
     }

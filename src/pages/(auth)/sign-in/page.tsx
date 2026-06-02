@@ -1,8 +1,10 @@
 "use client";
+import { useNavigate } from "react-router-dom";
 import { Link } from "react-router-dom";
 import { useState } from "react";
 
 function SignInPage() {
+  const navigate = useNavigate();
   const [errors, setErrors] = useState<{ [key: string]: string[] }>({});
   const [error, setError] = useState<string | null>(null);
 
@@ -27,12 +29,15 @@ function SignInPage() {
       if (response.ok) {
         const data = await response.json();
         console.log("response", data);
+        localStorage.setItem("token", data.token);
       } else {
         throw new Error("error");
       }
       console.log("email", email);
       console.log("password", password);
       console.log("formData", formData);
+
+      navigate("/");
     } catch (err: any) {
       setError(err?.message ?? "Something went wrong.");
     }
