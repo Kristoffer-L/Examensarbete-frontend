@@ -15,8 +15,8 @@ function GamePage() {
         const response = await fetch(`http://localhost:3000/chess/${matchId}`);
         const data = await response.json();
         console.log("match data", data);
-        setGame(new Chess(data.fen));
         setData(data);
+        setGame(new Chess(data.fen));
       } catch (error) {
         console.error("Error fetching match:", error);
       }
@@ -60,11 +60,11 @@ function GamePage() {
 
     setGame(gameCopy);
     updateStatus(gameCopy);
-    saveMove(gameCopy, move);
+    saveMove(gameCopy);
     return true;
   }
 
-  async function saveMove(gameCopy: Chess, move: any) {
+  async function saveMove(gameCopy: Chess) {
     try {
       const token = localStorage.getItem("token");
 
@@ -98,7 +98,7 @@ function GamePage() {
             style={{ borderColor: game.turn() === "w" ? "yellow" : "gray" }}
           >
             <p>User:</p>
-            <div>{data.whitePlayer.name}</div>
+            <div>{data?.whitePlayer?.name}</div>
           </div>
           <div className="flex bg-white rounded-3xl my-5">
             <h2 className="m-auto px-4 md:my-5 md:mx-auto">{status}</h2>
@@ -108,7 +108,7 @@ function GamePage() {
             style={{ borderColor: game.turn() === "w" ? "gray" : "yellow" }}
           >
             <p>Opponent:</p>
-            <div>{data.blackPlayer.name}</div>
+            <div>{data?.blackPlayer?.name}</div>
           </div>
         </div>
         <div className="mx-4 md:w-[50%] md:m-auto">

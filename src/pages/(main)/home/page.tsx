@@ -1,12 +1,12 @@
-import { Chess } from "chess.js";
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
+import CreateChessModal from "../../../components/CreateChessModal/CreateChessModal";
 
 function HomePage() {
   const navigate = useNavigate();
-  const chess = new Chess();
 
   const [matches, setMatches] = useState([]);
+  const [isModalOpen, setIsModalOpen] = useState(false);
 
   useEffect(() => {
     async function fetchMatchesByUserId() {
@@ -43,49 +43,11 @@ function HomePage() {
     fetchMatchesByUserId();
   }, [navigate]);
 
-  const createMatch = async () => {
-    try {
-      const token = localStorage.getItem("token");
-
-      if (!token) {
-        navigate("/sign-in");
-        return;
-      }
-
-      const response = await fetch("http://localhost:3000/chess", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${token}`,
-        },
-        body: JSON.stringify({
-          fen: chess.fen(),
-          status: "pending",
-        }),
-      });
-
-      if (!response.ok) {
-        throw new Error("Failed to create match");
-      }
-
-      const data = await response.json();
-
-      console.log(data);
-
-      navigate("/chess/" + data._id);
-    } catch (error) {
-      console.error("Error creating match:", error);
-    }
-  };
-
   return (
     <div>
       <h1>Home Page</h1>
 
-      <button onClick={createMatch} className="text-white">
-        Create Match
-      </button>
-
+      <CreateChessModal />
       <h2>My Matches</h2>
       {matches.map((match: any) => (
         <div
