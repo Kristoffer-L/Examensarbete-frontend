@@ -68,20 +68,32 @@ function CreateChessModal() {
         onClick={() => {
           setIsOpen(true);
         }}
+        className="text-white font-bold border border-white px-2 rounded-3xl"
       >
-        Create Match
+        +
       </button>
       {isOpen && (
         <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-1">
-          <div className="bg-white w-full max-w-md rounded-xl p-6 shadow-lg">
-            <h2 className="text-2xl mb-4">Create Match</h2>
+          <div className="bg-[#007500] w-full max-w-md rounded-xl p-6 shadow-lg">
+            <div className="flex justify-between items-center">
+              <h2 className="text-white text-2xl mb-4">Create Match</h2>
+              <p
+                onClick={() => setIsOpen(false)}
+                className="text-white cursor-pointer mb-4"
+              >
+                X
+              </p>
+            </div>
             <select
               value={selectedUser}
               onChange={(e) => setSelectedUser(e.target.value)}
+              className="text-white"
             >
-              <option value="">Select a user</option>
+              <option value="" className="text-black">
+                Select a user
+              </option>
               {users.map((user) => (
-                <option key={user._id} value={user._id}>
+                <option key={user._id} value={user._id} className="text-black">
                   {user.name}
                 </option>
               ))}
@@ -89,7 +101,7 @@ function CreateChessModal() {
             <button
               onClick={createMatch}
               disabled={!selectedUser}
-              className="font-bold py-2 px-4 rounded"
+              className="text-white font-bold py-2 px-4 rounded"
             >
               Create Match
             </button>

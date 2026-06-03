@@ -7,16 +7,29 @@ function GamePage() {
   const { matchId } = useParams<{ matchId: string }>();
   const [game, setGame] = useState(new Chess());
   const [data, setData] = useState<any>(null);
+  const [color, setColor] = useState<"white" | "black">("white");
   const [status, setStatus] = useState<string>("playing");
 
   useEffect(() => {
     async function fetchMatch() {
+      const token = localStorage.getItem("token");
       try {
-        const response = await fetch(`http://localhost:3000/chess/${matchId}`);
+        const response = await fetch(`http://localhost:3000/chess/${matchId}`, {
+          method: "GET",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+        });
         const data = await response.json();
         console.log("match data", data);
-        setData(data);
-        setGame(new Chess(data.fen));
+
+        setData(data.chessMatch);
+        const playerColor =
+          data.chessMatch.whitePlayer._id === data.user._id ? "white" : "black";
+
+        setColor(playerColor);
+        setGame(new Chess(data.chessMatch.fen));
       } catch (error) {
         console.error("Error fetching match:", error);
       }
@@ -47,6 +60,13 @@ function GamePage() {
     targetSquare: string | null;
   }): boolean {
     if (!sourceSquare || !targetSquare) return false;
+
+    if (
+      (color === "white" && game.turn() !== "w") ||
+      (color === "black" && game.turn() !== "b")
+    ) {
+      return false;
+    }
 
     const gameCopy = new Chess(game.fen());
 
@@ -84,11 +104,6 @@ function GamePage() {
     }
   }
 
-  function resetGame() {
-    setGame(new Chess());
-    setStatus("playing");
-  }
-
   return (
     <>
       <section className="main">
@@ -97,7 +112,7 @@ function GamePage() {
             className="bg-white h-20 w-60 border-2 border-solid border-gray-500 rounded-3xl py-2.5 px-1 m-4"
             style={{ borderColor: game.turn() === "w" ? "yellow" : "gray" }}
           >
-            <p>User:</p>
+            <p>White:</p>
             <div>{data?.whitePlayer?.name}</div>
           </div>
           <div className="flex bg-white rounded-3xl my-5">
@@ -107,19 +122,19 @@ function GamePage() {
             className="bg-white h-20 w-60 border-2 border-solid border-gray-500 rounded-3xl py-2.5 px-1 m-4"
             style={{ borderColor: game.turn() === "w" ? "gray" : "yellow" }}
           >
-            <p>Opponent:</p>
+            <p>Black:</p>
             <div>{data?.blackPlayer?.name}</div>
           </div>
         </div>
         <div className="mx-4 md:w-[50%] md:m-auto">
           <Chessboard
             options={{
+              boardOrientation: color,
               position: game.fen(),
               onPieceDrop,
             }}
           />
         </div>
-        <button onClick={resetGame}>Reset</button>
       </section>
     </>
   );

@@ -5,8 +5,8 @@ import CreateChessModal from "../../../components/CreateChessModal/CreateChessMo
 function HomePage() {
   const navigate = useNavigate();
 
-  const [matches, setMatches] = useState([]);
-  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [matches, setMatches] = useState<any[]>([]);
+  const [user, setUser] = useState<any>(null);
 
   useEffect(() => {
     async function fetchMatchesByUserId() {
@@ -33,8 +33,8 @@ function HomePage() {
         const data = await response.json();
 
         console.log("matches for user", data);
-
         setMatches(data.matches);
+        setUser(data.user);
       } catch (error) {
         console.error("Error fetching matches for user:", error);
       }
@@ -45,20 +45,27 @@ function HomePage() {
 
   return (
     <div>
-      <h1>Home Page</h1>
-
-      <CreateChessModal />
-      <h2>My Matches</h2>
-      {matches.map((match: any) => (
-        <div
-          key={match._id}
-          className="border p-2 my-2 cursor-pointer"
-          onClick={() => navigate(`/chess/${match._id}`)}
-        >
-          <p>Match ID: {match._id}</p>
-          <p>Status: {match.status}</p>
-        </div>
-      ))}
+      <h1 className="text-white text-3xl text-center font-bold mb-4">
+        Home Page
+      </h1>
+      <div className="flex items-center gap-4">
+        <h2 className="text-white">My Matches</h2>
+        <CreateChessModal />
+      </div>
+      <div className="mx-4">
+        {matches.map((match: any) => {
+          return (
+            <div
+              key={match._id}
+              className="w-[33%] h-40 border border-white p-2 my-2 rounded-3xl cursor-pointer"
+              onClick={() => navigate(`/chess/${match._id}`)}
+            >
+              <p className="text-white">Match ID: {match._id}</p>
+              <p className="text-white">Status: {match.status}</p>
+            </div>
+          );
+        })}
+      </div>
     </div>
   );
 }
