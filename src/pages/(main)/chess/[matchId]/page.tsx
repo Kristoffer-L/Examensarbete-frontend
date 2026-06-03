@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { Chess } from "chess.js";
 import { Chessboard } from "react-chessboard";
 import { useParams } from "react-router-dom";
+import socket from "../../../../socket/socket";
 
 function GamePage() {
   const { matchId } = useParams<{ matchId: string }>();
@@ -38,6 +39,42 @@ function GamePage() {
     fetchMatch();
   }, [matchId]);
 
+  useEffect(() => {
+    if (!matchId) return;
+
+    console.log("JOINING ROOM:", matchId);
+
+    // IMPORTANT: prevent multiple connections
+    if (!socket.connected) {
+      socket.connect();
+    }
+
+    socket.emit("join-game", matchId);
+
+    const handleMove = (move: any) => {
+      setGame((prev) => {
+        const gameCopy = new Chess(prev.fen());
+
+        const result = gameCopy.move({
+          from: move.from,
+          to: move.to,
+          promotion: move.promotion,
+        });
+
+        if (!result) return prev;
+
+        updateStatus(gameCopy);
+        return gameCopy;
+      });
+    };
+
+    socket.on("move", handleMove);
+
+    return () => {
+      socket.off("move", handleMove);
+    };
+  }, [matchId]);
+
   function updateStatus(gameCopy: Chess) {
     if (gameCopy.isCheckmate()) {
       const loser = gameCopy.turn() === "w" ? "White" : "Black";
@@ -46,7 +83,7 @@ function GamePage() {
     } else if (gameCopy.isStalemate()) {
       setStatus("stalemate");
     } else if (gameCopy.isDraw()) {
-      setStatus("Draw 🤝");
+      setStatus("Draw");
     } else {
       setStatus("playing");
     }
@@ -80,6 +117,12 @@ function GamePage() {
 
     setGame(gameCopy);
     updateStatus(gameCopy);
+
+    socket.emit("move", {
+      gameId: matchId,
+      move,
+    });
+
     saveMove(gameCopy);
     return true;
   }
