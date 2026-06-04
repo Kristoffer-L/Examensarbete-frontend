@@ -6,7 +6,6 @@ function HomePage() {
   const navigate = useNavigate();
 
   const [matches, setMatches] = useState<any[]>([]);
-  const [user, setUser] = useState<any>(null);
 
   useEffect(() => {
     async function fetchMatchesByUserId() {
@@ -18,7 +17,7 @@ function HomePage() {
           return;
         }
 
-        const response = await fetch(`http://localhost:3000/users/me`, {
+        const response = await fetch(`http://localhost:3000/users/matches`, {
           method: "GET",
           headers: {
             "Content-Type": "application/json",
@@ -34,7 +33,6 @@ function HomePage() {
 
         console.log("matches for user", data);
         setMatches(data.matches);
-        setUser(data.user);
       } catch (error) {
         console.error("Error fetching matches for user:", error);
       }
@@ -49,19 +47,38 @@ function HomePage() {
         Home Page
       </h1>
       <div className="flex items-center gap-4">
-        <h2 className="text-white">My Matches</h2>
+        <h2 className="text-white">My Chess Matches</h2>
         <CreateChessModal />
       </div>
-      <div className="mx-4">
+      <div className="flex flex-wrap gap-2 mx-4">
         {matches.map((match: any) => {
+          const fen = match.fen;
+
+          const parts = fen.split(" ");
+          const turn = parts[1];
           return (
             <div
               key={match._id}
-              className="w-[33%] h-40 border border-white p-2 my-2 rounded-3xl cursor-pointer"
+              className="flex flex-[1_1_calc(50%-10px)] md:flex-[1_1_calc(33.3%-10px)] md:max-w-[33%] flex-col h-60 border border-white my-2 p-2 rounded-3xl cursor-pointer"
               onClick={() => navigate(`/chess/${match._id}`)}
             >
-              <p className="text-white">Match ID: {match._id}</p>
-              <p className="text-white">Status: {match.status}</p>
+              <img
+                src={`chess.jpg`}
+                alt="Chess"
+                className="h-[50%] w-full object-top object-cover rounded-3xl "
+              />
+              <hr className="border-white my-2"></hr>
+              <p className="text-white text-center">
+                Current Turn: <br></br> {turn === "w" ? "White" : "Black"}
+              </p>
+              <div className="flex justify-between mt-auto">
+                <p className="text-white px-2">
+                  White Player: <br></br> {match.whitePlayer.name}
+                </p>
+                <p className="text-white px-2">
+                  Black Player: <br></br> {match.blackPlayer.name}
+                </p>
+              </div>
             </div>
           );
         })}

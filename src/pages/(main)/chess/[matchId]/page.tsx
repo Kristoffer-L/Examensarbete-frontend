@@ -42,9 +42,8 @@ function GamePage() {
   useEffect(() => {
     if (!matchId) return;
 
-    console.log("JOINING ROOM:", matchId);
+    console.log("joining room:", matchId);
 
-    // IMPORTANT: prevent multiple connections
     if (!socket.connected) {
       socket.connect();
     }
