@@ -1,21 +1,15 @@
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
-import { useNavigate } from "react-router-dom";
 
 function Header() {
   const [IsAuthenticated, setIsAuthenticated] = useState(false);
-  const navigate = useNavigate();
 
   useEffect(() => {
     checkAuth();
-  }, [navigate]);
+  }, [IsAuthenticated]);
 
   async function checkAuth() {
     const token = localStorage.getItem("token");
-
-    if (!token) {
-      navigate("/sign-in");
-    }
     try {
       const response = await fetch(`http://localhost:3000/users/me`, {
         method: "GET",
@@ -36,7 +30,7 @@ function Header() {
 
   const handleSignOut = () => {
     localStorage.removeItem("token");
-    navigate("/sign-in");
+    setIsAuthenticated(false);
   };
   return (
     <header>
