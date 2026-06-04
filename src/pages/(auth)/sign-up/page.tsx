@@ -1,6 +1,7 @@
 "use client";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { API_URL } from "../../../config";
 
 function SignUpPage() {
   const navigate = useNavigate();
@@ -19,7 +20,7 @@ function SignUpPage() {
     const password = formData.get("password") as string;
 
     try {
-      const response = await fetch(`http://localhost:3000/auth/sign-up`, {
+      const response = await fetch(`${API_URL}/auth/sign-up`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

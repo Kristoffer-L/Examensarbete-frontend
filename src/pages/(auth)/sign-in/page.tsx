@@ -2,6 +2,7 @@
 import { useNavigate } from "react-router-dom";
 import { Link } from "react-router-dom";
 import { useState } from "react";
+import { API_URL } from "../../../config";
 
 function SignInPage() {
   const navigate = useNavigate();
@@ -19,7 +20,7 @@ function SignInPage() {
     const password = formData.get("password") as string;
 
     try {
-      const response = await fetch(`http://localhost:3000/auth/sign-in`, {
+      const response = await fetch(`${API_URL}/auth/sign-in`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

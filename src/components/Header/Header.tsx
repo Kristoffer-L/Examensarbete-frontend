@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
+import { API_URL } from "../../config";
 
 function Header() {
   const [IsAuthenticated, setIsAuthenticated] = useState(false);
@@ -11,7 +12,7 @@ function Header() {
   async function checkAuth() {
     const token = localStorage.getItem("token");
     try {
-      const response = await fetch(`http://localhost:3000/users/me`, {
+      const response = await fetch(`${API_URL}/users/me`, {
         method: "GET",
         headers: {
           "Content-Type": "application/json",

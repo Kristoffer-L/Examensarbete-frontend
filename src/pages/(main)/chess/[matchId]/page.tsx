@@ -3,6 +3,7 @@ import { Chess } from "chess.js";
 import { Chessboard } from "react-chessboard";
 import { useParams } from "react-router-dom";
 import socket from "../../../../socket/socket";
+import { API_URL } from "../../../../config";
 
 function GamePage() {
   const { matchId } = useParams<{ matchId: string }>();
@@ -15,7 +16,7 @@ function GamePage() {
     async function fetchMatch() {
       const token = localStorage.getItem("token");
       try {
-        const response = await fetch(`http://localhost:3000/chess/${matchId}`, {
+        const response = await fetch(`${API_URL}/chess/${matchId}`, {
           method: "GET",
           headers: {
             "Content-Type": "application/json",
@@ -130,7 +131,7 @@ function GamePage() {
     try {
       const token = localStorage.getItem("token");
 
-      await fetch(`http://localhost:3000/chess/${matchId}`, {
+      await fetch(`${API_URL}/chess/${matchId}`, {
         method: "PATCH",
         headers: {
           "Content-Type": "application/json",
