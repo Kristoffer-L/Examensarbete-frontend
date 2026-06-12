@@ -8,23 +8,26 @@ function Header() {
   useEffect(() => {
     async function checkAuth() {
       const token = localStorage.getItem("token");
+
+      if (!token) {
+        setIsAuthenticated(false);
+        return;
+      }
+
       try {
         const response = await fetch(`${API_URL}/users/me`, {
-          method: "GET",
           headers: {
-            "Content-Type": "application/json",
             Authorization: `Bearer ${token}`,
           },
         });
-        if (response.ok) {
-          setIsAuthenticated(true);
-        } else {
-          setIsAuthenticated(false);
-        }
+
+        setIsAuthenticated(response.ok);
       } catch (error) {
-        console.error("Error checking authentication:", error);
+        console.error(error);
+        setIsAuthenticated(false);
       }
     }
+
     checkAuth();
   }, []);
 
