@@ -2,13 +2,14 @@ import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { Chess } from "chess.js";
 import { API_URL } from "../../config";
+import type { Users, User } from "../../types/users";
 
 function CreateChessModal() {
   const navigate = useNavigate();
   const [isOpen, setIsOpen] = useState(false);
   const [chess] = useState(new Chess());
 
-  const [users, setUsers] = useState<any[]>([]);
+  const [users, setUsers] = useState<Users>([]);
   const [selectedUser, setSelectedUser] = useState("");
 
   useEffect(() => {
@@ -49,7 +50,7 @@ function CreateChessModal() {
         },
         body: JSON.stringify({
           fen: chess.fen(),
-          blackPlayer: selectedUser,
+          black: selectedUser,
         }),
       });
 
@@ -90,7 +91,7 @@ function CreateChessModal() {
               <option value="" className="text-black">
                 Select a user
               </option>
-              {users.map((user) => (
+              {users.map((user: User) => (
                 <option key={user._id} value={user._id} className="text-black">
                   {user.name}
                 </option>

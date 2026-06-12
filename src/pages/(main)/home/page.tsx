@@ -3,10 +3,12 @@ import { useNavigate } from "react-router-dom";
 import CreateChessModal from "../../../components/CreateChessModal/CreateChessModal";
 import { API_URL } from "../../../config";
 
+import type { Match, Matches } from "../../../types/matches";
+
 function HomePage() {
   const navigate = useNavigate();
 
-  const [matches, setMatches] = useState<any[]>([]);
+  const [matches, setMatches] = useState<Matches>([]);
 
   useEffect(() => {
     async function fetchMatchesByUserId() {
@@ -34,8 +36,8 @@ function HomePage() {
 
         console.log("matches for user", data);
         setMatches(data.matches);
-      } catch (error) {
-        console.error("Error fetching matches for user:", error);
+      } catch (err: unknown) {
+        console.error(err, "Failed to fetch matches");
       }
     }
 
@@ -52,7 +54,7 @@ function HomePage() {
         <CreateChessModal />
       </div>
       <div className="flex flex-wrap gap-2 mx-4">
-        {matches.map((match: any) => {
+        {matches.map((match: Match) => {
           const fen = match.fen;
 
           const parts = fen.split(" ");
@@ -74,10 +76,10 @@ function HomePage() {
               </p>
               <div className="flex justify-between mt-auto">
                 <p className="text-white px-2">
-                  White Player: <br></br> {match.whitePlayer.name}
+                  White: <br></br> {match.white.name}
                 </p>
                 <p className="text-white px-2">
-                  Black Player: <br></br> {match.blackPlayer.name}
+                  Black: <br></br> {match.black.name}
                 </p>
               </div>
             </div>

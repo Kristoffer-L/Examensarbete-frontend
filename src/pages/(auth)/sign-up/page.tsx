@@ -39,8 +39,8 @@ function SignUpPage() {
       console.log("formData", formData);
 
       navigate("/sign-in");
-    } catch (err: any) {
-      setError(err?.message ?? "Something went wrong.");
+    } catch (err: unknown) {
+      console.error(err, "could not sign up");
     }
   }
 

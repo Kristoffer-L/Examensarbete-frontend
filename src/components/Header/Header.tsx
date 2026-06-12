@@ -6,28 +6,27 @@ function Header() {
   const [IsAuthenticated, setIsAuthenticated] = useState(false);
 
   useEffect(() => {
-    checkAuth();
-  }, [IsAuthenticated]);
-
-  async function checkAuth() {
-    const token = localStorage.getItem("token");
-    try {
-      const response = await fetch(`${API_URL}/users/me`, {
-        method: "GET",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${token}`,
-        },
-      });
-      if (response.ok) {
-        setIsAuthenticated(true);
-      } else {
-        setIsAuthenticated(false);
+    async function checkAuth() {
+      const token = localStorage.getItem("token");
+      try {
+        const response = await fetch(`${API_URL}/users/me`, {
+          method: "GET",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+        });
+        if (response.ok) {
+          setIsAuthenticated(true);
+        } else {
+          setIsAuthenticated(false);
+        }
+      } catch (error) {
+        console.error("Error checking authentication:", error);
       }
-    } catch (error) {
-      console.error("Error checking authentication:", error);
     }
-  }
+    checkAuth();
+  }, []);
 
   const handleSignOut = () => {
     localStorage.removeItem("token");

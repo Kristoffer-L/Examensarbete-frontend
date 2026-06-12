@@ -5,10 +5,13 @@ import { useParams } from "react-router-dom";
 import socket from "../../../../socket/socket";
 import { API_URL } from "../../../../config";
 
+import type { Match } from "../../../../types/matches.ts";
+import type ChessMove from "../../../../types/chessMove.ts";
+
 function GamePage() {
   const { matchId } = useParams<{ matchId: string }>();
   const [game, setGame] = useState(new Chess());
-  const [data, setData] = useState<any>(null);
+  const [data, setData] = useState<Match | null>(null);
   const [color, setColor] = useState<"white" | "black">("white");
   const [status, setStatus] = useState<string>("playing");
 
@@ -28,11 +31,11 @@ function GamePage() {
 
         setData(data.chessMatch);
         const playerColor =
-          data.chessMatch.whitePlayer._id === data.user._id ? "white" : "black";
+          data.chessMatch.white._id === data.user._id ? "white" : "black";
 
         setColor(playerColor);
         setGame(new Chess(data.chessMatch.fen));
-      } catch (error) {
+      } catch (error: unknown) {
         console.error("Error fetching match:", error);
       }
     }
@@ -51,7 +54,7 @@ function GamePage() {
 
     socket.emit("join-game", matchId);
 
-    const handleMove = (move: any) => {
+    const handleMove = (move: ChessMove) => {
       setGame((prev) => {
         const gameCopy = new Chess(prev.fen());
 
@@ -156,7 +159,7 @@ function GamePage() {
             style={{ borderColor: game.turn() === "w" ? "yellow" : "gray" }}
           >
             <p>White:</p>
-            <div>{data?.whitePlayer?.name}</div>
+            <div>{data?.white?.name}</div>
           </div>
           <div className="flex bg-white rounded-3xl my-5">
             <h2 className="m-auto px-4 md:my-5 md:mx-auto">{status}</h2>
@@ -166,7 +169,7 @@ function GamePage() {
             style={{ borderColor: game.turn() === "w" ? "gray" : "yellow" }}
           >
             <p>Black:</p>
-            <div>{data?.blackPlayer?.name}</div>
+            <div>{data?.black?.name}</div>
           </div>
         </div>
         <div className="mx-4 md:w-[50%] md:m-auto">
