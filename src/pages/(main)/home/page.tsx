@@ -103,7 +103,7 @@ function HomePage() {
                 />
                 <button
                   onClick={(e) => {
-                    e.stopPropagation(); // prevents card click (navigate)
+                    e.stopPropagation();
                     handleDelete(match._id);
                   }}
                   className="absolute top-2 right-2 text-red-500 text-3xl"
