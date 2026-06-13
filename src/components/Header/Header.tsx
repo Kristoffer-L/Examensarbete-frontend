@@ -1,8 +1,10 @@
 import { useEffect, useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { API_URL } from "../../config";
 
 function Header() {
+  const navigate = useNavigate();
+
   const [IsAuthenticated, setIsAuthenticated] = useState(false);
 
   useEffect(() => {
@@ -29,15 +31,16 @@ function Header() {
     }
 
     checkAuth();
-  }, []);
+  }, [navigate]);
 
   const handleSignOut = () => {
     localStorage.removeItem("token");
     setIsAuthenticated(false);
+    navigate("/sign-in");
   };
   return (
     <header>
-      <nav className="flex items-center gap-4 bg-[#007500] w-[75%] h-20 my-4 mx-auto rounded-2xl p-4">
+      <nav className="flex items-center gap-4 bg-[#007500] w-[75%] h-20 mx-auto rounded-b-2xl p-4 mb-4">
         <Link
           className="text-white text-2xl no-underline hover:underline"
           to="/"

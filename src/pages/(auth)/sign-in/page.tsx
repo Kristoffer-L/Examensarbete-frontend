@@ -32,7 +32,7 @@ function SignInPage() {
         console.log("response", data);
         localStorage.setItem("token", data.token);
       } else {
-        throw new Error("error");
+        throw new Error("Wrong email or password");
       }
       console.log("email", email);
       console.log("password", password);
@@ -45,12 +45,12 @@ function SignInPage() {
   }
 
   return (
-    <div className="flex flex-col bg-green-400 w-[50%] rounded-2xl m-auto p-4">
+    <div className="flex flex-col bg-[#007500] w-[50%] rounded-2xl m-auto p-4">
       <form onSubmit={handleSubmit} className="flex flex-col">
-        <h1 className="text-center text-2xl">Sign In</h1>
+        <h1 className="text-white text-center text-2xl">Sign In</h1>
         {error && <p style={{ color: "red" }}>{error}</p>}
         <div>
-          <label>Email:</label>
+          <label className="text-white">Email:</label>
           <input
             className="flex bg-white border rounded-md"
             type="email"
@@ -63,7 +63,7 @@ function SignInPage() {
           )}
         </div>
         <div>
-          <label>Password:</label>
+          <label className="text-white">Password:</label>
           <input
             className="flex bg-white border rounded-md"
             type="password"
@@ -77,13 +77,13 @@ function SignInPage() {
         </div>
         <button
           type="submit"
-          className="bg-green-600 text-white border border-black rounded-md self-center py-2 px-6 m-4 hover:bg-green-700"
+          className="bg-green-600 text-white rounded-md self-center py-2 px-6 m-4 hover:bg-green-700"
         >
           Sign In
         </button>
       </form>
-      <p>Don't have an account?</p>
-      <Link to="/sign-up" className="underline text-bold">
+      <p className="text-white">Don't have an account?</p>
+      <Link to="/sign-up" className="text-white underline text-bold">
         Sign up here.
       </Link>
     </div>

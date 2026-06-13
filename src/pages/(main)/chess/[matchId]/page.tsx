@@ -4,7 +4,7 @@ import { Chessboard } from "react-chessboard";
 import { useParams } from "react-router-dom";
 import socket from "../../../../socket/socket";
 import { API_URL } from "../../../../config";
-
+import GameOverModalScreen from "../../../../components/GameOverScreenModal/GameOverScreenModal.tsx";
 import type { Match } from "../../../../types/matches.ts";
 import type ChessMove from "../../../../types/chessMove.ts";
 
@@ -13,7 +13,21 @@ function GamePage() {
   const [game, setGame] = useState(new Chess());
   const [data, setData] = useState<Match | null>(null);
   const [color, setColor] = useState<"white" | "black">("white");
-  const [status, setStatus] = useState<string>("playing");
+  const isGameOver = game.isGameOver();
+  const gameResult = isGameOver
+    ? {
+        type: game.isCheckmate()
+          ? ("checkmate" as const)
+          : game.isDraw()
+            ? ("draw" as const)
+            : ("stalemate" as const),
+        winnerId: game.isCheckmate()
+          ? game.turn() === "w"
+            ? data?.black?._id
+            : data?.white?._id
+          : undefined,
+      }
+    : null;
 
   useEffect(() => {
     async function fetchMatch() {
@@ -67,28 +81,40 @@ function GamePage() {
         if (!result) return prev;
 
         updateStatus(gameCopy);
-        return gameCopy;
+        return new Chess(gameCopy.fen());
       });
     };
 
+    const handleGameOver = (payload: any) => {
+      console.log("Game over event received from server", payload);
+    };
+
     socket.on("move", handleMove);
+    socket.on("game-over", handleGameOver);
 
     return () => {
       socket.off("move", handleMove);
+      socket.off("game-over", handleGameOver);
     };
-  }, [matchId]);
+  }, [matchId, data]);
 
   function updateStatus(gameCopy: Chess) {
+    if (!data || !matchId) return;
+    if (data.winner) return;
     if (gameCopy.isCheckmate()) {
-      const loser = gameCopy.turn() === "w" ? "White" : "Black";
-      const winner = loser === "White" ? "Black" : "White";
-      setStatus(`Checkmate! You ${winner === "White" ? "win" : "lost"}`);
+      const loser = gameCopy.turn();
+      const winnerColor = loser === "w" ? "black" : "white";
+      const winnerId =
+        winnerColor === "white" ? data.white._id : data.black._id;
+      socket.emit("game-over", {
+        gameId: matchId,
+        type: "checkmate",
+        winnerId,
+      });
     } else if (gameCopy.isStalemate()) {
-      setStatus("stalemate");
+      socket.emit("game-over", { gameId: matchId, type: "stalemate" });
     } else if (gameCopy.isDraw()) {
-      setStatus("Draw");
-    } else {
-      setStatus("playing");
+      socket.emit("game-over", { gameId: matchId, type: "draw" });
     }
   }
 
@@ -101,6 +127,8 @@ function GamePage() {
   }): boolean {
     if (!sourceSquare || !targetSquare) return false;
 
+    if (game.isGameOver()) return false;
+
     if (
       (color === "white" && game.turn() !== "w") ||
       (color === "black" && game.turn() !== "b")
@@ -110,28 +138,33 @@ function GamePage() {
 
     const gameCopy = new Chess(game.fen());
 
-    const move = gameCopy.move({
-      from: sourceSquare,
-      to: targetSquare,
-      promotion: "q",
-    });
+    try {
+      const move = gameCopy.move({
+        from: sourceSquare,
+        to: targetSquare,
+        promotion: "q",
+      });
 
-    if (!move) return false;
+      if (!move) return false;
 
-    setGame(gameCopy);
-    updateStatus(gameCopy);
+      updateStatus(gameCopy);
+      setGame(new Chess(gameCopy.fen()));
 
-    socket.emit("move", {
-      gameId: matchId,
-      move,
-    });
+      socket.emit("move", {
+        gameId: matchId,
+        move,
+      });
 
-    saveMove(gameCopy);
-    return true;
+      saveMove(gameCopy);
+      return true;
+    } catch (error) {
+      return false;
+    }
   }
 
   async function saveMove(gameCopy: Chess) {
     try {
+      if (!data) return;
       const token = localStorage.getItem("token");
 
       await fetch(`${API_URL}/chess/${matchId}`, {
@@ -143,6 +176,19 @@ function GamePage() {
         body: JSON.stringify({
           fen: gameCopy.fen(),
           status: gameCopy.isGameOver() ? "finished" : "active",
+          finishedAt: gameCopy.isGameOver() ? new Date() : null,
+          result: gameCopy.isCheckmate()
+            ? gameCopy.turn() === "w"
+              ? "black"
+              : "white"
+            : gameCopy.isDraw()
+              ? "draw"
+              : null,
+          winner: gameCopy.isCheckmate()
+            ? gameCopy.turn() === "w"
+              ? data.black._id
+              : data.white._id
+            : null,
         }),
       });
     } catch (error) {
@@ -153,26 +199,20 @@ function GamePage() {
   return (
     <>
       <section className="main">
-        <div className="flex justify-between mx-4">
-          <div
-            className="bg-white h-20 w-60 border-2 border-solid border-gray-500 rounded-3xl py-2.5 px-1 m-4"
-            style={{ borderColor: game.turn() === "w" ? "yellow" : "gray" }}
-          >
-            <p>White:</p>
-            <div>{data?.white?.name}</div>
+        <div className="flex justify-center my-4 gap-4">
+          <div className="bg-white h-20 w-60 rounded-3xl py-2.5 px-1">
+            <p>White:</p> <div>{data?.white?.name}</div>
           </div>
-          <div className="flex bg-white rounded-3xl my-5">
-            <h2 className="m-auto px-4 md:my-5 md:mx-auto">{status}</h2>
+          <div className="flex h-20 bg-white rounded-3xl py-2.5 px-1">
+            <p className="text-center px-5">
+              Turn: <br /> {game.turn() === color[0] ? "you" : "opponent"}
+            </p>
           </div>
-          <div
-            className="bg-white h-20 w-60 border-2 border-solid border-gray-500 rounded-3xl py-2.5 px-1 m-4"
-            style={{ borderColor: game.turn() === "w" ? "gray" : "yellow" }}
-          >
-            <p>Black:</p>
-            <div>{data?.black?.name}</div>
+          <div className="bg-white h-20 w-60 rounded-3xl py-2.5 px-1">
+            <p>Black:</p> <div>{data?.black?.name}</div>
           </div>
         </div>
-        <div className="mx-4 md:w-[50%] md:m-auto">
+        <div className=" w-[90%] xl:w-150 m-auto">
           <Chessboard
             options={{
               boardOrientation: color,
@@ -180,6 +220,9 @@ function GamePage() {
               onPieceDrop,
             }}
           />
+          {isGameOver && (
+            <GameOverModalScreen gameResult={gameResult} data={data} />
+          )}
         </div>
       </section>
     </>

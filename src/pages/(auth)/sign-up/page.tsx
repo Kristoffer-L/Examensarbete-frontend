@@ -45,12 +45,12 @@ function SignUpPage() {
   }
 
   return (
-    <div className="flex flex-col bg-green-400 w-[50%] rounded-2xl m-auto p-4">
+    <div className="flex flex-col bg-[#007500] w-[50%] rounded-2xl m-auto p-4">
       <form onSubmit={handleSubmit} className="flex flex-col">
-        <h1 className="text-center text-2xl">Sign Up</h1>
+        <h1 className="text-white text-center text-2xl">Sign Up</h1>
         {error && <p style={{ color: "red" }}>{error}</p>}
         <div>
-          <label>Name:</label>
+          <label className="text-white">Name:</label>
           <input
             className="flex bg-white border rounded-md"
             type="text"
@@ -63,7 +63,7 @@ function SignUpPage() {
           )}
         </div>
         <div>
-          <label>Email:</label>
+          <label className="text-white">Email:</label>
           <input
             className="flex bg-white border rounded-md"
             type="email"
@@ -76,7 +76,7 @@ function SignUpPage() {
           )}
         </div>
         <div>
-          <label>Password:</label>
+          <label className="text-white">Password:</label>
           <input
             className="flex bg-white border rounded-md"
             type="password"
