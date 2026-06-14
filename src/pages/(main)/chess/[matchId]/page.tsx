@@ -212,7 +212,7 @@ function GamePage() {
             <p>Black:</p> <div>{data?.black?.name}</div>
           </div>
         </div>
-        <div className=" w-[90%] xl:w-150 m-auto">
+        <div className=" w-[90%] lg:w-120 xl:w-150 m-auto">
           <Chessboard
             options={{
               boardOrientation: color,
