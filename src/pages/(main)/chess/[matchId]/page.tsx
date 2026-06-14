@@ -200,19 +200,21 @@ function GamePage() {
     <>
       <section className="main">
         <div className="flex justify-center my-4 gap-4">
-          <div className="bg-white h-20 w-60 rounded-3xl py-2.5 px-1">
-            <p>White:</p> <div>{data?.white?.name}</div>
+          <div className="bg-white h-20 w-60 rounded-3xl py-2.5 px-2">
+            <p className="font-bold">White:</p>
+            <p className="text-[16px]">{data?.white?.name}</p>
           </div>
-          <div className="flex h-20 bg-white rounded-3xl py-2.5 px-1">
+          <div className="flex h-20 bg-white rounded-3xl py-2.5 px-2">
             <p className="text-center px-5">
               Turn: <br /> {game.turn() === color[0] ? "you" : "opponent"}
             </p>
           </div>
-          <div className="bg-white h-20 w-60 rounded-3xl py-2.5 px-1">
-            <p>Black:</p> <div>{data?.black?.name}</div>
+          <div className="bg-white h-20 w-60 rounded-3xl py-2.5 px-2">
+            <p className="font-bold">Black:</p>
+            <p className="text-[16px]">{data?.black?.name}</p>
           </div>
         </div>
-        <div className=" w-[90%] md:w-100 xl:w-150 m-auto">
+        <div className=" w-[90%] md:w-90 xl:w-140 m-auto">
           <Chessboard
             options={{
               boardOrientation: color,
