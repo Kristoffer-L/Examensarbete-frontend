@@ -90,7 +90,7 @@ function SignUpPage() {
         </div>
         <button
           type="submit"
-          className="bg-green-600 text-white border border-black rounded-md self-center py-2 px-6 m-4 hover:bg-green-700"
+          className="bg-green-600 text-white rounded-md self-center py-2 px-6 m-4 hover:bg-green-700"
         >
           Sign Up
         </button>
