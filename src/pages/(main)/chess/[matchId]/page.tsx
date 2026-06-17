@@ -85,16 +85,10 @@ function GamePage() {
       });
     };
 
-    const handleGameOver = (payload: any) => {
-      console.log("Game over event received from server", payload);
-    };
-
     socket.on("move", handleMove);
-    socket.on("game-over", handleGameOver);
 
     return () => {
       socket.off("move", handleMove);
-      socket.off("game-over", handleGameOver);
     };
   }, [matchId, data]);
 

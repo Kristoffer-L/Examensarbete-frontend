@@ -36,7 +36,6 @@ function SignInPage() {
       }
       console.log("email", email);
       console.log("password", password);
-      console.log("formData", formData);
 
       navigate("/");
     } catch (err: unknown) {
